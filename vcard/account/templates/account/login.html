@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+
+{% block titile %}
+用户登录
+{% endblock titile %}
+
+{% block content %}
+<h1>用户登录</h1>
+<p>请在以下表单填写用户名,密码登录~</p>
+<div class="login-form">
+<form action="{% url 'account:user_login' %}" method="POST">
+    {% csrf_token %}
+    {{form.as_p }}
+    <input type="hidden"  name='next' value="{{next}}">
+    <input type="submit"  value="登录">
+</form>
+</div>
+{% endblock content %}

@@ -1,0 +1,11 @@
+{% extends "account/base.html" %}
+{% block title %}
+完成用户注册提示
+{% endblock title %}
+
+{% block content %}
+<h1>欢迎新用户{{ new_user.username }}</h1>
+<p>恭喜您,用户已注册成功,您现在可以登录
+    <a href="{% url 'account:user_login' %}">登录</a>
+</p>
+{% endblock content %}

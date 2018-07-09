@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% load blog_tags %}
+
+{% block title %}
+blog首页
+{% endblock title %}
+
+{% block content %}
+<section id="profile" class="item">
+        <h2 class="item-title"><a href="/"><span class="title">个人资料</span><span class="icon-user"></span></a></h2>
+        <div class="item-border"><span></span></div>
+    </section><!-- /#profile -->
+
+    <section id="blog" class="item">
+        <h2 class="item-title"><a href="http://vcard.royalmasters.net/blog"><span class="title">日志列表</span> <span class="icon-blog"></span></a></h2>
+
+        <div class="item-cont clearfix">
+
+            <div class="col535 fl-left">
+
+                {% for post  in posts %}
+                
+                <article class="entry-box">
+                    <header class="entry-header">
+                        <h2 class="post-title"><a href="{% url 'blog:blog_detail' post.slug %}">{{ post.title }}</a></h2>
+                        <div class="post-info">
+                            由作者 <a href="#" title="Posts by admin" rel="author">{{post.author }}</a> 发布于
+                            <a href="#" title="View all posts in Creative" rel="category tag">{{post.category.name }}</a>
+                        </div>
+                    </header>
+                    <div class="entry-content">
+                        {% if post.image %}
+                            <div class="entry-photo"><img src="/media/{{ post.image }}" alt="{{post.title}}" /></div>
+                        {% endif %}
+
+                        <div class="clearfix">
+                            <div class="entry-data">
+                                <span class="month">{{ post.publish|date:'m'}}</span>
+                                <span class="day">{{ post.publish|date:'d' }}</span>
+                                <a href="#" class="comments-link"><i class="comments-icon"></i>{{ post.comments.count }}</a>
+                            </div>
+                            <div class="entry-text">
+                                <div><p>{{ post.body|truncatewords:40|safe }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer><a class="entry-more btn" href="{% url 'blog:blog_detail' post.slug %}">阅读全文</a></footer>
+                </article>
+                {% endfor %}
+                <div id="pageination" class="clearfix">
+                    <ul class="page-numbers">
+                        {% if posts.has_previous %}
+                            <li><a class="page-numbers" href="?page={{posts.previous_page_number }}">上一页</a></li>                        
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                            {% if i == posts.number %}
+                                <li><span class="page-numbers current">{{i}}</span></li>
+                            {% else %}
+                                <li><a class="page-numbers" href="?page={{i}}">{{i}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if posts.has_next  %}
+                            <li><a class="page-numbers" href="?page={{posts.next_page_number }}">下一页</a></li>                                                                   
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col230 fl-right">
+                <aside id="sidebar">
+                    <div class="widget">
+                        <h2>所有分类{% total_posts %}</h2>
+                        {% get_all_categories as categories %}
+                        <ul>
+                            {% for c in categories  %}
+                                <li><a href="{% url 'blog:blog_list_by_cslug' c.slug  %}" title="View all posts filed under Audio">{{c.name }}</a></li>
+                            {% endfor %}
+                            
+                        </ul>
+                    </div>
+
+                    {% show_latest_posts 3 %}
+
+                    <div class="widget">
+                        <h2>标签云集</h2>
+                        {% get_all_tags as tags %}
+                        <div class="tagcloud">
+                            {% for tag in tags %}
+                                <a href="{% url 'blog:blog_list_by_tag' %}?tag={{ tag }}" title="audio">{{tag }}</a>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <h2>Archives</h2>
+                        <ul>
+                            <li><a href="#">December 2013</a></li>
+                            <li><a href="#">November 2013</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="widget">
+                        <h2>Meta</h2>
+                        <ul>
+                            <li><a href="#">Log in</a></li>
+                            <li><a href="#" title="Syndicate this site using RSS 2.0">Entries <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+                            <li><a href="#" title="The latest comments to all posts in RSS">Comments <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+                            <li><a href="#" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.org</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div><!-- /.item-cont -->
+
+        <div class="item-border"><span></span></div>
+    </section><!-- /#blog -->
+
+{% endblock content %}
